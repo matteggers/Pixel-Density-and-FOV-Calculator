@@ -1,23 +1,4 @@
 import math
-#from pixelDensity import pixelDensity, resolution
-    #w = commonDimensions.get(diagonalSize[0])
-    #h = commonDimensions.get(diagonalSize[1])
-    
-commonDimensions = { #in inches, couldn't I have done this in excel?
-    "24": [20.918, 11.766],
-    "24.5": [21.354, 12.011],
-    "27": [23.533, 13.237],
-    "32": [27.89, 15.688],
-    "34": [29.634, 16.669],
-    "50": [43.579, 24.513],
-    "55": [47.937, 26.964],
-    "60": [52.295, 29.416],
-    "65": [56.652, 31.867],
-    "70": [61.01, 34.318],
-    "74.9": [65.281, 36.721],
-}
-
-#can find the horizontal width of any screen by dividing height / (16/9). inversly can do so by width x (16/9)
 
 
 def pythagoras(w): #Diagonal screen size in inches
