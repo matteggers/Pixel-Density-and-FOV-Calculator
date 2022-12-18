@@ -9,3 +9,11 @@ print width
 
 if size is within certain ranges, determine resolution.
 based on resolution will show pixel density
+
+
+
+
+
+plan of action:
+
+identify the error causing pixelwidth to not show

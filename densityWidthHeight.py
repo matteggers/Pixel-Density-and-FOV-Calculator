@@ -23,36 +23,37 @@ commonDimensions = { #in inches, couldn't I have done this in excel?
 def pythagoras(w): #Diagonal screen size in inches
     global rounded_hypotenuse
     
-    h = w / (16/9)
+    h = float(w / (16/9)) #assumes 16:9 aspect ratio
     
     hypotenuse = math.sqrt(((w*w) + (h*h)))
     rounded_hypotenuse = round(hypotenuse)
+
     return rounded_hypotenuse, hypotenuse, h
 
 def pythagoras(h): #Diagonal screen size in inches
     global rounded_hypotenuse
     
-    w = h * (16/9)
+    w = float(h * (16/9))
     
     hypotenuse = math.sqrt(((w*w) + (h*h)))
     rounded_hypotenuse = round(hypotenuse)
+    
     return rounded_hypotenuse, hypotenuse, w
 
 def sizeCheck(rounded_hypotenuse):
     global pixelWidth
     global pixelHeight
     
-    
-    if 27 > rounded_hypotenuse >= 21:
+    if 21 <= rounded_hypotenuse <= 27:
         pixelWidth = 1920
         pixelHeight = 1080
-    elif 34 >= rounded_hypotenuse >= 27:
+    elif 27 <= rounded_hypotenuse <= 34:
         pixelWidth = 2560
         pixelHeight = 1440
-    elif 75 >= rounded_hypotenuse >= 50:
+    elif 50 <= rounded_hypotenuse <= 75:
         pixelWidth = 3840
         pixelHeight = 2160
-    elif 75 > rounded_hypotenuse:
+    elif 75 < rounded_hypotenuse:
         pixelWidth = 7680
         pixelHeight = 4320
     else:
@@ -69,26 +70,17 @@ def pixelDensity(rounded_hypotenuse):
     
     return rounded_hypotenuse, rounded_diagonalPixels, PPI
 
-
-#eventually want it to ask if we want width or height, then display proper question
-#w = float(input("How wide would you like the screen in inches? "))
-#h = float(input("How tall would you like the screen in inches? "))
-
-#pythagoras(w)
-#sizeCheck(rounded_hypotenuse)
-#pixelDensity(rounded_hypotenuse)
-
 def allFunc():
     question = input("Would you like to input the width or height?\n")
     
     if question in ("Width", "width", "with", "w"):
-        w = float(input("How wide would you like the screen in inches? "))
+        w = float(input("How wide would you like the screen in inches?\n"))
         pythagoras(w)
     elif question in ("Height", "height", "h"):
-        h = float(input("How tall would you like the screen in inches? "))
+        h = float(input("How tall would you like the screen in inches?\n"))
         pythagoras(h)
         
-    sizeCheck(rounded_hypotenuse)
-    pixelDensity(rounded_hypotenuse)
+    sizeCheck(float(rounded_hypotenuse))
+    pixelDensity(float(rounded_hypotenuse))
     
 allFunc()
