@@ -1,0 +1,11 @@
+line by line
+
+
+how tall would you like the tv?
+
+take height and multiply by (16/9)
+
+print width
+
+if size is within certain ranges, determine resolution.
+based on resolution will show pixel density
