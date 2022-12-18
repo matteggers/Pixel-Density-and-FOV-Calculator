@@ -1,16 +1,13 @@
 import math
-
 #coding based on formulae found in: https://www.calculatorsoup.com/calculators/technology/ppi-calculator.php
-
 
 def pixelDensity(diagonalSize):
     diagonalPixels = math.sqrt(((w*w) + (h*h)))
     rounded_diagonalPixels = round(diagonalPixels, 2)
     
-    print(diagonalPixels)
     
     PPI = round((rounded_diagonalPixels / diagonalSize), 2)
-    print(PPI)
+    print(f"{PPI} pixels per inch")
     
     return diagonalSize, rounded_diagonalPixels, PPI
 
@@ -19,7 +16,7 @@ def resolution(diagonalSize):
         global w
         global h
 
-        if diagonalSize in (24, 24.5, 40): ## did a long list of or that did not work. Asked a user on learnpython discord and was informed of this way, which works. if you're still reading this long line... Hello!
+        if diagonalSize in (24, 24.5, 40): 
             w = 1920
             h = 1080
         elif diagonalSize in (27, 32, 34):
@@ -36,7 +33,7 @@ def resolution(diagonalSize):
         print("This value was not among the list of dimensions.")
 
 
-diagonalSize = float(input("Diagonal size of screen: "))
+diagonalSize = float(input("What is the diagonal size of the screen in inches? "))
 
 resolution(diagonalSize)
 pixelDensity(float(diagonalSize))
