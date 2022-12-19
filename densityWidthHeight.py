@@ -27,7 +27,7 @@ def sizeCheck(rounded_hypotenuse):
     global pixelWidth
     global pixelHeight
     global resolution
-    try:    
+    try:    #diagonal length in range
         if rounded_hypotenuse in chain(range(21,28), range(36,50)):
             pixelWidth = 1920
             pixelHeight = 1080
