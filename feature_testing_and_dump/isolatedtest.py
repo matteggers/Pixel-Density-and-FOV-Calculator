@@ -1,25 +1,80 @@
 import math
 from itertools import chain
 import numpy as np
+import time
+import sys
+import atexit
+
 #coding based on formulae found in: https://www.calculatorsoup.com/calculators/technology/ppi-calculator.php
 
-def resolution(diagonalSize):
+def availableSizes():
+    a = list(chain(np.arange(21,28,0.5), np.arange(27,35,0.5), np.arange(35,50, 0.5),
+                   np.arange(55,76,0.5)))
+    print(f'{a}, and to infinity.')
+
+#find max pixel density of each resolution.
+#create different categories for TV's and monitors because resolution differs depending on use. + if ultrawide
+#give a score of great, good, or not-so-good for pixel density
+
+def monitorSize(diagonalSize):
+    global w
+    global h
+    global screenRes
+    
+    diagonalSize = round(diagonalSize * 2)/2 #rounds to nearest half inch
+    try:
+        if diagonalSize in chain(np.arange(13, 28, 0.5), np.arange(41,50, 0.5)): 
+            w = 1920
+            h = 1080
+            screenRes = "1080p"
+        elif diagonalSize in np.arange(27,45,0.5):
+            while True:
+                isUltrawide = input("Is this monitor ultrawide? (Y/N) \n")
+                if isUltrawide in ("Yes", "yes", "Y", "y"): #***add functionality to loop again if input was not entered correctly 
+                    w = 2560
+                    h = 1440
+                    screenRes = "1440p"
+                    break
+                elif isUltrawide in ("No", "no", "N","n"):
+                    w = 1920
+                    h = 1080
+                    screenRes = 1080
+                    break
+                print("Invalid choice made, please try again.")
+        elif diagonalSize > 45:
+            print("You have entered a size above or below the available range for a monitor.\n")
+            print("Are you sure this is a monitor? Please restart the program and select the TV option.")
+            exit() 
+    except TypeError or ValueError or NameError:
+        time.sleep(5)
+        sys.exit("This value was not among the list of available dimensions.")
+
+
+def tvSize(diagonalSize):
     try:
         global w
         global h
         global screenRes
         
         diagonalSize = round(diagonalSize * 2)/2 #rounds to nearest half inch
-        print(diagonalSize)
 
-        if diagonalSize in chain(np.arange(13, 28, 0.5), np.arange(41,50, 0.5)): 
+        if diagonalSize in np.arange(13, 43, 0.5): 
             w = 1920
             h = 1080
             screenRes = "1080p"
-        elif diagonalSize in np.arange(27, 41, 0.5):
-            w = 2560
-            h = 1440
-            screenRes = "1440p"
+        if diagonalSize in np.arange(43,51, 0.5):
+            is4k = input("Is this TV 4k? (Y/N)\n")
+            while True:
+                if is4k in ("Yes", "yes", "Y", "y"):
+                    w = 3840
+                    h = 2160
+                    screenRes = "4k"
+                    break
+                elif is4k in ("No", "no", "N", "n"):
+                    w = 1920
+                    h = 1080
+                    break
+                print("Invalid choice made, please try again")
         elif diagonalSize in list(np.arange(55, 76, 0.5)):
             w = 3840
             h = 2160
@@ -28,18 +83,13 @@ def resolution(diagonalSize):
             w = 7680
             h = 4320
             screenRes = "8k"
-        elif diagonalSize in np.arange(12, 21, 0.5):
-            w = 1280
-            h = 720
-            screenRes = "720p"
         else:
             print("Somehow, you entered a size beyond the program's control...")
-        return w, h
+            exit()
+        return w, h, screenRes, diagonalSize
 
-    except TypeError or ValueError:
-        print("This value was not among the list of dimensions.")
-    
-        
+    except TypeError or ValueError or NameError:
+        sys.exit("This value was not among the list of available dimensions.")
         
 def pixelDensity(diagonalSize):
     diagonalPixels = math.sqrt(((w*w) + (h*h)))
@@ -49,20 +99,35 @@ def pixelDensity(diagonalSize):
     PPI = round((rounded_diagonalPixels / diagonalSize), 2)
     print(f"The size of the screen is {diagonalSize} inches and contains {PPI} pixels per inch at {screenRes}")
     
+    exit()
+    
     return diagonalSize, rounded_diagonalPixels, PPI
 
-def availableSizes():
-    a = list(chain(np.arange(21,28,0.5), np.arange(27,35,0.5), np.arange(35,50, 0.5),
-                   np.arange(55,76,0.5)))
-    print(f'{a}, and to infinity.')
-#availableSizes()
+def exit():
+    #countdown = [3, 2, 1]
+    #for i in countdown:
+    #    print(i)
+    #    time.sleep(1)
+    #sys.exit("Bye!")
+    atexit.register(lambda: input("Press Enter to exit.")) #found on S/O
+   
+   
+def betterCallAll():
+    global diagonalSize
+    
+    diagonalSize = float(input("What is the diagonal size of the screen in inches\n "))
+    
+    screenType = input("Is the screen a TV or monitor? (TV/M) \n")
+    if screenType in ("TV", "tv", "t", "v", "T", "V"):
+        tvSize(diagonalSize)
+    elif screenType in ("Monitor", "monitor", "M", "m"):
+        monitorSize(diagonalSize)
+    
+           
+    pixelDensity(diagonalSize)
+    
+betterCallAll()
 
-diagonalSize = float(input("What is the diagonal size of the screen in inches? "))
 
-resolution(diagonalSize)
-pixelDensity(float(diagonalSize))
-
-
-
-#find max pixel density of each resolution.
-#create different categories for TV's and monitors because resolution differs depending on use.
+def maxDensity():
+    user_input = input("Would you like to know the user's input")
