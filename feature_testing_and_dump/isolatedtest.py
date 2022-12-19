@@ -1,44 +1,68 @@
 import math
+from itertools import chain
+import numpy as np
+#coding based on formulae found in: https://www.calculatorsoup.com/calculators/technology/ppi-calculator.php
 
-
-
-def pythagoras(w): #Diagonal screen size in inches
-    global rounded_hypotenuse
-    
-    h = float(w / (16/9)) #assumes 16:9 aspect ratio
-    
-    hypotenuse = math.sqrt(((w*w) + (h*h)))
-    rounded_hypotenuse = round(hypotenuse, 2)
-    print(w)
-    print(h)
-    print(rounded_hypotenuse)
-    print(type(rounded_hypotenuse))
-
-    return rounded_hypotenuse, hypotenuse, h
-
-def sizeCheck(rounded_hypotenuse):
-    global pixelWidth
-    global pixelHeight
-    
-    if rounded_hypotenuse in range (21,28): #RANGE DOESNT SUPPORT FLOAT
-        pixelWidth = 1920
-        pixelHeight = 1080
-    elif rounded_hypotenuse in range (27,35):
-        pixelWidth = 2560
-        pixelHeight = 1440
-    elif rounded_hypotenuse in range (50,76):
-        pixelWidth = 3840
-        pixelHeight = 2160
-    elif rounded_hypotenuse > 75:
-        pixelWidth = 7680
-        pixelHeight = 4320
-    else:
-        print("Value not within range.")
+def resolution(diagonalSize):
+    try:
+        global w
+        global h
+        global screenRes
         
+        diagonalSize = round(diagonalSize * 2)/2 #rounds to nearest half inch
+        print(diagonalSize)
+
+        if diagonalSize in chain(np.arange(13, 28, 0.5), np.arange(41,50, 0.5)): 
+            w = 1920
+            h = 1080
+            screenRes = "1080p"
+        elif diagonalSize in np.arange(27, 41, 0.5):
+            w = 2560
+            h = 1440
+            screenRes = "1440p"
+        elif diagonalSize in list(np.arange(55, 76, 0.5)):
+            w = 3840
+            h = 2160
+            screenRes = "4k"
+        elif diagonalSize > 75:
+            w = 7680
+            h = 4320
+            screenRes = "8k"
+        elif diagonalSize in np.arange(12, 21, 0.5):
+            w = 1280
+            h = 720
+            screenRes = "720p"
+        else:
+            print("Somehow, you entered a size beyond the program's control...")
+        return w, h
+
+    except TypeError or ValueError:
+        print("This value was not among the list of dimensions.")
     
-    return pixelWidth, pixelHeight
+        
+        
+def pixelDensity(diagonalSize):
+    diagonalPixels = math.sqrt(((w*w) + (h*h)))
+    rounded_diagonalPixels = round(diagonalPixels, 2)
+    
+    
+    PPI = round((rounded_diagonalPixels / diagonalSize), 2)
+    print(f"The size of the screen is {diagonalSize} inches and contains {PPI} pixels per inch at {screenRes}")
+    
+    return diagonalSize, rounded_diagonalPixels, PPI
 
-w = float(input("How wide would you like the screen in inches?\n"))
+def availableSizes():
+    a = list(chain(np.arange(21,28,0.5), np.arange(27,35,0.5), np.arange(35,50, 0.5),
+                   np.arange(55,76,0.5)))
+    print(f'{a}, and to infinity.')
+#availableSizes()
 
-pythagoras(w)
+diagonalSize = float(input("What is the diagonal size of the screen in inches? "))
 
+resolution(diagonalSize)
+pixelDensity(float(diagonalSize))
+
+
+
+#find max pixel density of each resolution.
+#create different categories for TV's and monitors because resolution differs depending on use.
