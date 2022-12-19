@@ -1,7 +1,7 @@
 import math
 
-
 def pythagoras(w): #Diagonal screen size in inches
+    global hypotenuse
     global rounded_hypotenuse
     
     h = float(w / (16/9)) #assumes 16:9 aspect ratio
@@ -11,34 +11,29 @@ def pythagoras(w): #Diagonal screen size in inches
 
     return rounded_hypotenuse, hypotenuse, h
 
-def pythagoras(h): #Diagonal screen size in inches
-    global rounded_hypotenuse
-    
-    w = float(h * (16/9))
-    
-    hypotenuse = math.sqrt(((w*w) + (h*h)))
-    rounded_hypotenuse = round(hypotenuse)
-    
-    return rounded_hypotenuse, hypotenuse, w
-
 def sizeCheck(rounded_hypotenuse):
     global pixelWidth
     global pixelHeight
-    
-    if 21 <= rounded_hypotenuse <= 27:
+    global resolution
+        
+    if rounded_hypotenuse in range (21,28):
         pixelWidth = 1920
         pixelHeight = 1080
-    elif 27 <= rounded_hypotenuse <= 34:
+        resolution = "1080p"  
+    elif rounded_hypotenuse in range (27,35):
         pixelWidth = 2560
         pixelHeight = 1440
-    elif 50 <= rounded_hypotenuse <= 75:
+        resolution = "1440p"
+    elif rounded_hypotenuse in range (50,76):
         pixelWidth = 3840
         pixelHeight = 2160
-    elif 75 < rounded_hypotenuse:
+        resolution = "4k"
+    elif rounded_hypotenuse > 75:
         pixelWidth = 7680
         pixelHeight = 4320
+        resolution = "8k"
     else:
-        print("Value not within range.")
+        print(f"The diagonal length of the monitor is {rounded_hypotenuse}, which is out of range.")
     return pixelWidth, pixelHeight
     
 def pixelDensity(rounded_hypotenuse):
@@ -47,7 +42,7 @@ def pixelDensity(rounded_hypotenuse):
     
     
     PPI = round((rounded_diagonalPixels / rounded_hypotenuse), 2)
-    print(f"There are {PPI} pixels per inch")
+    print(f"There are {PPI} pixels per inch at {resolution}")
     
     return rounded_hypotenuse, rounded_diagonalPixels, PPI
 
@@ -61,7 +56,9 @@ def allFunc():
         h = float(input("How tall would you like the screen in inches?\n"))
         pythagoras(h)
         
-    sizeCheck(float(rounded_hypotenuse))
+    sizeCheck(rounded_hypotenuse)
     pixelDensity(float(rounded_hypotenuse))
     
 allFunc()
+
+#on right track, now getting name error for rounded hypotenus
