@@ -1,4 +1,5 @@
 import math
+from itertools import chain
 #coding based on formulae found in: https://www.calculatorsoup.com/calculators/technology/ppi-calculator.php
 
 def pixelDensity(diagonalSize):
@@ -7,7 +8,7 @@ def pixelDensity(diagonalSize):
     
     
     PPI = round((rounded_diagonalPixels / diagonalSize), 2)
-    print(f"{PPI} pixels per inch")
+    print(f"{PPI} pixels per inch at {screenRes}")
     
     return diagonalSize, rounded_diagonalPixels, PPI
 
@@ -15,18 +16,28 @@ def resolution(diagonalSize):
     try:
         global w
         global h
+        global screenRes
+        
+        diagonalSize = int(round(diagonalSize))
 
-        if diagonalSize in (24, 24.5, 40): 
+        if diagonalSize in chain(range(21,28), range(36,50)): 
             w = 1920
             h = 1080
-        elif diagonalSize in (27, 32, 34):
+            screenRes = "1080p"
+        elif diagonalSize in range(27, 35):
             w = 2560
             h = 1440
-        elif diagonalSize in (55, 60, 65, 70, 75):
+            screenRes = "1440p"
+        elif diagonalSize in range(55, 76):
             w = 3840
             h = 2160
+            screenRes = "4k"
+        elif diagonalSize > 75:
+            w = 7680
+            h = 4320
+            screenRes = "8k"
         else:
-            print("Sorry, this size is not available at this time.")
+            print("Somehow, you entered a size beyond the program's control...")
         return w, h
 
     except TypeError or ValueError:
