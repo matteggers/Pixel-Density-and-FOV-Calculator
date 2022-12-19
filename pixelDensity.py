@@ -8,7 +8,7 @@ def pixelDensity(diagonalSize):
     
     
     PPI = round((rounded_diagonalPixels / diagonalSize), 2)
-    print(f"{PPI} pixels per inch at {screenRes}")
+    print(f"The size of the screen is {diagonalSize} inches and contains {PPI} pixels per inch at {screenRes}")
     
     return diagonalSize, rounded_diagonalPixels, PPI
 
@@ -38,7 +38,7 @@ def resolution(diagonalSize):
             screenRes = "8k"
         else:
             print("Somehow, you entered a size beyond the program's control...")
-        return w, h
+        return w, h, screenRes, diagonalSize
 
     except TypeError or ValueError:
         print("This value was not among the list of dimensions.")
