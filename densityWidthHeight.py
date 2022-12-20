@@ -1,6 +1,8 @@
 import math
 from itertools import chain
 
+#DOESNT TAKE MONITOR OR TV CONSIDERATION YET
+
 def wTheorem(w): #Diagonal screen size in inches
     global hypotenuse
     global rounded_hypotenuse
@@ -47,7 +49,7 @@ def sizeCheck(rounded_hypotenuse):
         else:
             print(f"The diagonal length of the monitor is {rounded_hypotenuse}, which is out of range.")
     except NameError:
-        print("NameError again!")
+        print("Invalid choice made, please try again.")
     return pixelWidth, pixelHeight
     
 def pixelDensity(rounded_hypotenuse):
@@ -56,22 +58,44 @@ def pixelDensity(rounded_hypotenuse):
     
     
     PPI = round((rounded_diagonalPixels / rounded_hypotenuse), 2)
-    print(f"There are {PPI} pixels per inch at {resolution}.")
+    print(f"There are {PPI} pixels per inch with a diagonal screen length of {rounded_hypotenuse} inches at {resolution}. \n ")
     
     return rounded_hypotenuse, rounded_diagonalPixels, PPI
 
 def allFunc():
     question = input("Would you like to input the width or height?\n")
     
-    if question in ("Width", "width", "with", "w"):
-        w = float(input("How wide would you like the screen in inches?\n"))
-        wTheorem(w)
-    if question in ("Height", "height", "h"):
-        h = float(input("How tall would you like the screen in inches?\n"))
-        hTheorem(h)
+    try:
+        while True:
+            if question in ("Width", "width", "with", "w"):
+                try:
+                    w = float(input("How wide would you like the screen in inches?\n"))
+                    wTheorem(w)
+                    break
+                except ValueError:
+                    print("Invalid choice made, please try again.") 
+            elif question in ("Height", "height", "h"):
+                try:
+                    h = float(input("How tall would you like the screen in inches?\n"))
+                    hTheorem(h)
+                    break
+                except ValueError:
+                    print("Invalid choice made, please try again.")
+            else:
+                break                   
+        sizeCheck(rounded_hypotenuse)
+        pixelDensity(float(rounded_hypotenuse))              
+    except  NameError:
+        print("Invalid choice made, please try again.")          
+    
+    
+    #if question in ("Width", "width", "with", "w"):
+    #    w = float(input("How wide would you like the screen in inches?\n"))
+    #    wTheorem(w)
+    #if question in ("Height", "height", "h"):
+    #    h = float(input("How tall would you like the screen in inches?\n"))
+    #    hTheorem(h)
 
-        
-    sizeCheck(rounded_hypotenuse)
-    pixelDensity(float(rounded_hypotenuse))
+
     
 allFunc()
