@@ -12,9 +12,6 @@ def availableSizes():
                    np.arange(55,76,0.5)))
     print(f'{a}, and to infinity.')
 
-#find max pixel density of each resolution.
-#create different categories for TV's and monitors because resolution differs depending on use. + if ultrawide
-#give a score of great, good, or not-so-good for pixel density
 
 def monitorSize(diagonalSize):
     global w
@@ -90,11 +87,12 @@ def tvSize(diagonalSize):
 
     except TypeError or ValueError or NameError:
         sys.exit("This value was not among the list of available dimensions.")
+
         
 def pixelDensity(diagonalSize):
     diagonalPixels = math.sqrt(((w*w) + (h*h)))
     rounded_diagonalPixels = round(diagonalPixels, 2)
-    
+    global PPI
     
     PPI = round((rounded_diagonalPixels / diagonalSize), 2)
     print(f"The size of the screen is {diagonalSize} inches and contains {PPI} pixels per inch at {screenRes}")
@@ -103,12 +101,19 @@ def pixelDensity(diagonalSize):
     
     return diagonalSize, rounded_diagonalPixels, PPI
 
+
+def pixelJudge(PPI):
+    PPI = round(PPI *5)/5 #rounds to nearest 1/5
+    
+    if PPI in np.arange(95,111,0.2): #well aware this could be done better by rounding PPI, but I am just testing for now.
+        print("This is in an optimal pixel density range.")
+    elif PPI < 80:
+        print(f"With a pixel density of {PPI}, the screen may be unclear at closer viewing distances.")
+    elif PPI in np.arange(80,96, 0.2):
+        print("The pixel density of this screen could be better, but it is ok.")
+
+
 def exit():
-    #countdown = [3, 2, 1]
-    #for i in countdown:
-    #    print(i)
-    #    time.sleep(1)
-    #sys.exit("Bye!")
     atexit.register(lambda: input("Press Enter to exit.")) #found on S/O
    
    
@@ -122,12 +127,9 @@ def betterCallAll():
         tvSize(diagonalSize)
     elif screenType in ("Monitor", "monitor", "M", "m"):
         monitorSize(diagonalSize)
-    
+
            
     pixelDensity(diagonalSize)
+    pixelJudge(PPI)
     
 betterCallAll()
-
-
-def maxDensity():
-    user_input = input("Would you like to know the user's input")
