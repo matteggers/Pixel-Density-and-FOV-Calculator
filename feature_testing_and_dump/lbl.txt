@@ -17,3 +17,6 @@ based on resolution will show pixel density
 plan of action:
 
 identify the error causing pixelwidth to not show
+
+#find max pixel density of each resolution.
+also add a way to restart the program without exiting.
