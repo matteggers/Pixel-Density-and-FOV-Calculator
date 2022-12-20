@@ -72,6 +72,7 @@ def tvSize(diagonalSize):
                     h = 1080
                     break
                 print("Invalid choice made, please try again")
+                break
         elif diagonalSize in list(np.arange(55, 76, 0.5)):
             w = 3840
             h = 2160
@@ -80,15 +81,13 @@ def tvSize(diagonalSize):
             w = 7680
             h = 4320
             screenRes = "8k"
-        else:
-            print("Somehow, you entered a size beyond the program's control...")
-            exit()
         return w, h, screenRes, diagonalSize
 
-    except TypeError or ValueError or NameError:
-        sys.exit("This value was not among the list of available dimensions.")
+    except (TypeError, ValueError, NameError) as error:
+        spitter()
+        print(error)
 
-        
+                
 def pixelDensity(diagonalSize):
     diagonalPixels = math.sqrt(((w*w) + (h*h)))
     rounded_diagonalPixels = round(diagonalPixels, 2)
@@ -113,23 +112,33 @@ def pixelJudge(PPI):
         print("The pixel density of this screen could be better, but it is ok.")
 
 
-def exit():
-    atexit.register(lambda: input("Press Enter to exit.")) #found on S/O
-   
-   
-def betterCallAll():
-    global diagonalSize
-    
-    diagonalSize = float(input("What is the diagonal size of the screen in inches\n "))
-    
-    screenType = input("Is the screen a TV or monitor? (TV/M) \n")
-    if screenType in ("TV", "tv", "t", "v", "T", "V"):
-        tvSize(diagonalSize)
-    elif screenType in ("Monitor", "monitor", "M", "m"):
-        monitorSize(diagonalSize)
+def exit(): 
+    return atexit.register(lambda: input("Press Enter to exit.")) #found on S/O
 
-           
-    pixelDensity(diagonalSize)
-    pixelJudge(PPI)
+   
+def spitter(): 
+    return print("Invalid choice made, please try again")
+
+
+def betterCallAll():
+    global diagonalSize 
     
+    while True:
+        try:
+            diagonalSize = float(input("What is the diagonal size of the screen in inches?\n "))
+            screenType = input("Is the screen a TV or monitor? (TV/M) \n")
+        
+            if screenType in ("TV", "tv", "t", "v", "T", "V"):
+                    tvSize(diagonalSize)
+            elif screenType in ("Monitor", "monitor", "M", "m"):
+                    monitorSize(diagonalSize)
+            pixelDensity(diagonalSize)
+            pixelJudge(PPI)
+            break
+        except (NameError, ValueError) as error:
+            spitter()
+            print(error)
+            return False
+            
+
 betterCallAll()
