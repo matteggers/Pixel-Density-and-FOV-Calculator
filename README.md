@@ -8,7 +8,7 @@ Hey there! This is my first project that provides some use!
 
 This program takes the **_diagonal length_** of the screen and calculates its pixel density.
 
-### densityWidthHeight.py (I should've named this something else)
+### densityWidthHeight.py >(I should've named this something else)
 
 This program takes the width **_or_** height of a screen you'd like and calculates pixel density and the diagonal length.
 
