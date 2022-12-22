@@ -1,41 +1,35 @@
 import math
 import numpy as np
+import atexit
 
-#tvDimensions = {
-#   
-#   
-#   "70": [61, 34.3],
-#   "75": [65.4, 36.8]
-#   
-#   
-#}
 reference_dimension = [65.4, 36.8]
 
-
-user_size = int(input("What is the size of your screen? Round to the nearest increment of 5. \n"))
-#user_distance = int(input("How far will you be from the screen?"))
-#user_media = int(input("Please input height of the media station the TV will sit on.")) #add option for wall mounting and exception to the 3 inch addition of stand
-#view_height = 0 #make user optino to default to 42.
-
+try:
+    user_size = float(input("What is the size of your screen? Round to the nearest increment of 5. \n"))
+    user_distance = float(input("How far will you be from the screen in inches?\n"))
+except ValueError as Error:
+    print(Error)
+    exit()
 
 range_identifier = list(range(40,80, 5))
 
 
-#print(range_identifier)
-#print(type(range_identifier))
-
-
-
-def sizeCalculator():
+def sizeCalculator(): #Finds the multiplier for physical size calculations by finding index difference
     global index_multiplier
     
-    if user_size in range_identifier:
-        size_index = range_identifier.index(user_size)
-        index_multiplier = size_index - range_identifier.index(75)
-        
+    try:
+        if user_size in range_identifier: 
+            size_index = range_identifier.index(user_size)
+            index_multiplier = size_index - range_identifier.index(75)
+    except NameError as Error:
+        print(Error)
+        exit()
     return index_multiplier, size_index, user_size
+
           
-def lowerEstimate():
+def lowerEstimate(): #Uses dimension differences that result in lower estimations of width/height
+    global lowerAlg
+    
     lowerAlg = []
     
     lowerAlgWidth = round((reference_dimension[0] - (-4.4 * index_multiplier)), 2)
@@ -44,10 +38,12 @@ def lowerEstimate():
     lowerAlgHeight = round((reference_dimension[1] - (-2.5 * index_multiplier)), 2)
     lowerAlg.append(lowerAlgHeight)
     
-    print(lowerAlg)
     return lowerAlg, lowerAlgWidth, lowerAlgHeight
+
+   
+def UpperEstimate(): #Uses dimension differences that result in upper estimations of width/height
+    global upperAlg
     
-def UpperEstimate():
     upperAlg = []
     
     upperAlgWidth = round((reference_dimension[0] - (-4.3 * index_multiplier)), 2)
@@ -56,30 +52,59 @@ def UpperEstimate():
     upperAlgHeight = round((reference_dimension[1] - (-2.5 * index_multiplier)), 2)
     upperAlg.append(upperAlgHeight)
     
-    print(upperAlg)
     return upperAlg, upperAlgWidth, upperAlgHeight
+
     
+def lowerTriangulation(): #Gets the viewing angle: Pythag. Theorem -> arcsin for viewing angle -> * 2 for total
+    global lowerViewEstimate
+    
+    a = (lowerAlg[0] / 2)
+    b = user_distance
+    c = math.sqrt((a*a) + (b*b))
+    halfViewAngle = math.asin(a/c)
+    lowerViewEstimate = round(((halfViewAngle * 100) * 2), 2) #Upper estimate of viewing angle of the nearest degree
+    
+    return a, b, c, halfViewAngle, lowerViewEstimate
+
+    
+def upperTriangulation(): #Gets the viewing angle: Pythag. Theorem -> arcsin for viewing angle -> * 2 for total
+    global upperViewEstimate
+    
+    a = (upperAlg[0] / 2)
+    b = user_distance
+    c = math.sqrt((a*a) + ((b*b)))
+    halfViewAngle = math.asin(a/c)
+    upperViewEstimate = round(((halfViewAngle * 100) * 2), 2) #Upper estimate of viewing angle to the nearest degree
+
+    return a, b, c, halfViewAngle, upperViewEstimate
+
+    
+def fovCheck():
+    fovEstimate = []
+    
+    fovEstimate.append(lowerViewEstimate)
+    fovEstimate.append(upperViewEstimate)
+    
+    if fovEstimate[1] > 60:
+        print(f"Your FOV is between {fovEstimate[0]} and {fovEstimate[1]} degrees. It should be below 60 degrees to remain within a human's Image Recognition FOV.")
+        exit()
+    elif fovEstimate[1] < 60:
+        print(f"Your FOV is between {fovEstimate[0]} and {fovEstimate[1]} degrees, which is below 60 degrees. Your FOV is within an acceptable range.")
+        exit() 
+        
+
+def exit():
+
+    return atexit.register(lambda: input("Press Enter to exit.")) #found on S/O
+
+
 def caller():
     sizeCalculator()
     lowerEstimate()
     UpperEstimate()
+    lowerTriangulation()
+    upperTriangulation()
+    fovCheck()
+
     
 caller()
-
-              
-
-
- 
-#subtract index of reference by user_size to get index and use to multiple and subtract
-    
-
-
-
-
-
-
-#create formula for height and width additions of screens based on a pillar size.
-# add option for link to bestbuy link and get exact width
-
-
-#increments of 5 increase x by [] and y by []
