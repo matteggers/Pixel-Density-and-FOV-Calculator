@@ -6,6 +6,7 @@ reference_dimension = [65.4, 36.8] # 75 inch TV is reference. Currently only wor
 
 try:
     user_size = float(input("What is the size of your screen? Round to the nearest half inch. \n"))
+    user_size = round((user_size * 2) / 2 )
     user_distance = float(input("How far will you be from the screen in inches?\n"))
 except ValueError as Error:
     print(Error)
@@ -40,7 +41,7 @@ def lowerEstimate(): #Uses dimension differences that result in lower estimation
     
     return lowerAlg, lowerAlgWidth, lowerAlgHeight
 
-   
+
 def UpperEstimate(): #Uses dimension differences that result in upper estimations of width/height
     global upperAlg
     
@@ -86,10 +87,10 @@ def fovCheck():
     fovEstimate.append(upperViewEstimate)
     
     if fovEstimate[1] > 60:
-        print(f"Your FOV is between {fovEstimate[0]} and {fovEstimate[1]} degrees. It should be below 60 degrees to remain within a human's Image Recognition FOV.")
+        print(f"Your FOV with a {user_size} inch screen is between {fovEstimate[0]} and {fovEstimate[1]} degrees. It should be below 60 degrees to remain within a human's Image Recognition FOV.")
         exit()
     elif fovEstimate[1] < 60:
-        print(f"Your FOV is between {fovEstimate[0]} and {fovEstimate[1]} degrees, which is below 60 degrees. Your FOV is within an acceptable range.")
+        print(f"Your FOV with a {user_size} inch screen is between {fovEstimate[0]} and {fovEstimate[1]} degrees, which is below 60 degrees. Your FOV is within an acceptable range.")
         exit() 
         
 
