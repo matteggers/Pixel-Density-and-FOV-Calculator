@@ -109,3 +109,6 @@ def caller():
 
     
 caller()
+
+##create function that asks what viewing distance, then shows max tv size. for loop
+#for i in __ if viewing angle is greater than 60 discard and move on. if below 60 print size
