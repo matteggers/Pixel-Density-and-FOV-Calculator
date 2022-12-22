@@ -2,16 +2,16 @@ import math
 import numpy as np
 import atexit
 
-reference_dimension = [65.4, 36.8]
+reference_dimension = [65.4, 36.8] # 75 inch TV is reference. Currently only works with TV's =< 75, will soon work with numbers above
 
 try:
-    user_size = float(input("What is the size of your screen? Round to the nearest increment of 5. \n"))
+    user_size = float(input("What is the size of your screen? Round to the nearest half inch. \n"))
     user_distance = float(input("How far will you be from the screen in inches?\n"))
 except ValueError as Error:
     print(Error)
     exit()
 
-range_identifier = list(range(40,80, 5))
+range_identifier = list(np.arange(40,80, 0.5))
 
 
 def sizeCalculator(): #Finds the multiplier for physical size calculations by finding index difference
@@ -19,8 +19,8 @@ def sizeCalculator(): #Finds the multiplier for physical size calculations by fi
     
     try:
         if user_size in range_identifier: 
-            size_index = range_identifier.index(user_size)
-            index_multiplier = size_index - range_identifier.index(75)
+            size_index = range_identifier.index(user_size) / 10
+            index_multiplier = size_index - range_identifier.index(75) / 10
     except NameError as Error:
         print(Error)
         exit()
