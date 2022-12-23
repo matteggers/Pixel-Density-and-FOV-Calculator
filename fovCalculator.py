@@ -2,6 +2,7 @@ import math
 import numpy as np
 import atexit
 import json
+from os import path
 
 reference_dimension = [65.4, 36.8] # 75 inch TV is reference. Currently only works with TV's =< 75, will soon work with numbers above
 range_identifier = list(np.arange(40,80, 0.5))
@@ -126,7 +127,7 @@ def caller():
     upperTriangulation()
     fovCheck()
 
-caller()
+#caller()
             
         
     
@@ -138,12 +139,14 @@ def dataWriter():
         sizeCalculator(user_size=i)
         UpperEstimate()
         upperTriangulation()
-        #upperViewList.append(i)
-        #print(f"{i} inch screen")
-        #print(f"{upperViewEstimate} Degrees - UPPER VIEW ESTIMATE\n")
         sizeData.update({i : upperViewEstimate})
-        print(sizeData)
-dataWriter()
+  
+  
+    with open(f'{user_size}_{user_distance}.json', 'a+') as file: #a+ reading and writing - creates file if not exist
+       json.dump(sizeData, file)
+    
+
+#dataWriter()
 
 ##create function that asks what viewing distance, then shows max tv size. for loop
 #for i in __ if viewing angle is greater than 60 discard and move on. if below 60 print size
