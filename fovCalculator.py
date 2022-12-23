@@ -3,16 +3,20 @@ import numpy as np
 import atexit
 
 reference_dimension = [65.4, 36.8] # 75 inch TV is reference. Currently only works with TV's =< 75, will soon work with numbers above
-
-try:
-    user_size = float(input("What is the size of your screen? Round to the nearest half inch. \n"))
-    user_size = round((user_size * 2) / 2 )
-    user_distance = float(input("How far will you be from the screen in inches?\n"))
-except ValueError as Error:
-    print(Error)
-    exit()
-
 range_identifier = list(np.arange(40,80, 0.5))
+sizeData = {}
+
+def userInput():
+    global user_size
+    global user_distance
+    
+    try:
+        user_size = float(input("What is the size of your screen? Round to the nearest half inch. \n"))
+        user_size = round((user_size * 2) / 2 )
+        user_distance = float(input("How far will you be from the screen in inches?\n"))
+    except ValueError as Error:
+        print(Error)
+        exit()
 
 
 def sizeCalculator(): #Finds the multiplier for physical size calculations by finding index difference
@@ -81,11 +85,14 @@ def upperTriangulation(): #Gets the viewing angle: Pythag. Theorem -> arcsin for
 
     
 def fovCheck():
+    global fovEstimate
     fovEstimate = []
     
     fovEstimate.append(lowerViewEstimate)
     fovEstimate.append(upperViewEstimate)
     
+    if fovEstimate[1] in np.arange(49,53,0.01): #49-52 degrees is optimal viewing.
+        print(f"Your FOV with a {user_size} inch screen is between {fovEstimate[0]} and {fovEstimate[1]} degrees. This is an optimal viewing FOV.")
     if fovEstimate[1] > 60:
         print(f"Your FOV with a {user_size} inch screen is between {fovEstimate[0]} and {fovEstimate[1]} degrees. It should be below 60 degrees to remain within a human's Image Recognition FOV.")
         exit()
@@ -100,15 +107,28 @@ def exit():
 
 
 def caller():
+    userInput()
     sizeCalculator()
     lowerEstimate()
     UpperEstimate()
     lowerTriangulation()
     upperTriangulation()
-    fovCheck()
+    #fovCheck()
 
+
+def dataWriter(): #Uses upper estimations to provide FOV of different TV size at same viewing distance.
+    slicedDimensions = [40, 60, 65, 70, 75]
     
-caller()
+    for i in slicedDimensions:
+        user_size = i
+        sizeCalculator()
+        UpperEstimate()
+        upperTriangulation()
+
+        print(f"\n{upperViewEstimate} - Degree FOV (UPPER ESTIMATE)")
+        print(f"{upperAlg[0]} - Inches wide (UPPER ALG WIDTH)")
+        print(f"{i}\n")
+
 
 ##create function that asks what viewing distance, then shows max tv size. for loop
 #for i in __ if viewing angle is greater than 60 discard and move on. if below 60 print size
