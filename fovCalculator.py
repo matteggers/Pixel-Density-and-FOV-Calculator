@@ -1,10 +1,19 @@
 import math
 import numpy as np
 import atexit
+import json
 
 reference_dimension = [65.4, 36.8] # 75 inch TV is reference. Currently only works with TV's =< 75, will soon work with numbers above
 range_identifier = list(np.arange(40,80, 0.5))
-sizeData = {}
+sizeData = {
+    40: '',
+    45: '',
+    50: '',
+    55: '',
+    60: '',
+    65: '',
+    70: '',
+            }
 
 def userInput():
     global user_size
@@ -17,10 +26,12 @@ def userInput():
     except ValueError as Error:
         print(Error)
         exit()
+    return user_size, user_distance
 
 
-def sizeCalculator(): #Finds the multiplier for physical size calculations by finding index difference
+def sizeCalculator(user_size): #Finds the multiplier for physical size calculations by finding index difference
     global index_multiplier
+    global size_index #-----------
     
     try:
         if user_size in range_identifier: 
@@ -108,27 +119,31 @@ def exit():
 
 def caller():
     userInput()
-    sizeCalculator()
+    sizeCalculator(user_size)
     lowerEstimate()
     UpperEstimate()
     lowerTriangulation()
     upperTriangulation()
-    #fovCheck()
+    fovCheck()
 
-
-def dataWriter(): #Uses upper estimations to provide FOV of different TV size at same viewing distance.
-    slicedDimensions = [40, 60, 65, 70, 75]
+caller()
+            
+        
+    
+def dataWriter():
+    slicedDimensions = [40, 45, 50, 55, 60, 65, 70, 75]
+    #upperViewList = []
     
     for i in slicedDimensions:
-        user_size = i
-        sizeCalculator()
+        sizeCalculator(user_size=i)
         UpperEstimate()
         upperTriangulation()
-
-        print(f"\n{upperViewEstimate} - Degree FOV (UPPER ESTIMATE)")
-        print(f"{upperAlg[0]} - Inches wide (UPPER ALG WIDTH)")
-        print(f"{i}\n")
-
+        #upperViewList.append(i)
+        #print(f"{i} inch screen")
+        #print(f"{upperViewEstimate} Degrees - UPPER VIEW ESTIMATE\n")
+        sizeData.update({i : upperViewEstimate})
+        print(sizeData)
+dataWriter()
 
 ##create function that asks what viewing distance, then shows max tv size. for loop
 #for i in __ if viewing angle is greater than 60 discard and move on. if below 60 print size
