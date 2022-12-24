@@ -3,7 +3,7 @@ library(ggplot2)
 library(ggrepel)
 
 
-setwd("PATH")
+setwd("C:/Users/matth/Documents/Projects/PixelDensity")
 user_data <- read.csv('data.csv')
 
 
@@ -33,4 +33,4 @@ ggplot(data = user_data,
   annotate("text", x=58.75, y = 56, label= "Danger Territory")+
   annotate("text", x = 58.75, y = 61, label = "Outside of FOV range")
 
-ggsave("plot.png")
+ggsave("plot.png", width = 5, height = 5, units = "in", dpi = 300)
