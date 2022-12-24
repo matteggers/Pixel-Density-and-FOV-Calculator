@@ -1,20 +1,13 @@
 import math
 import numpy as np
 import atexit
-import json
-from os import path
+import pandas as pd
+
 
 reference_dimension = [65.4, 36.8] # 75 inch TV is reference. Currently only works with TV's =< 75, will soon work with numbers above
 range_identifier = list(np.arange(40,80, 0.5))
-sizeData = {
-    40: '',
-    45: '',
-    50: '',
-    55: '',
-    60: '',
-    65: '',
-    70: '',
-            }
+sizeData = [40, 45, 50, 55, 60, 65, 70, 75]
+fovData = []
 
 def userInput():
     global user_size
@@ -79,7 +72,7 @@ def lowerTriangulation(): #Gets the viewing angle: Pythag. Theorem -> arcsin for
     b = user_distance
     c = math.sqrt((a*a) + (b*b))
     halfViewAngle = math.asin(a/c)
-    lowerViewEstimate = round(((halfViewAngle * 100) * 2), 2) #Upper estimate of viewing angle of the nearest degree
+    lowerViewEstimate = round(((halfViewAngle * 100) * 2), 1) #Lower estimate of viewing angle to the nearest tenth of a degree
     
     return a, b, c, halfViewAngle, lowerViewEstimate
 
@@ -91,7 +84,7 @@ def upperTriangulation(): #Gets the viewing angle: Pythag. Theorem -> arcsin for
     b = user_distance
     c = math.sqrt((a*a) + ((b*b)))
     halfViewAngle = math.asin(a/c)
-    upperViewEstimate = round(((halfViewAngle * 100) * 2), 2) #Upper estimate of viewing angle to the nearest degree
+    upperViewEstimate = round(((halfViewAngle * 100) * 2), 1) #Upper estimate of viewing angle to the nearest tenth of a degree
 
     return a, b, c, halfViewAngle, upperViewEstimate
 
@@ -103,14 +96,16 @@ def fovCheck():
     fovEstimate.append(lowerViewEstimate)
     fovEstimate.append(upperViewEstimate)
     
-    if fovEstimate[1] in np.arange(49,53,0.01): #49-52 degrees is optimal viewing.
+    if fovEstimate[1] in np.arange(34,55, 0.1):
         print(f"Your FOV with a {user_size} inch screen is between {fovEstimate[0]} and {fovEstimate[1]} degrees. This is an optimal viewing FOV.")
     if fovEstimate[1] > 60:
         print(f"Your FOV with a {user_size} inch screen is between {fovEstimate[0]} and {fovEstimate[1]} degrees. It should be below 60 degrees to remain within a human's Image Recognition FOV.")
         exit()
-    elif fovEstimate[1] < 60:
-        print(f"Your FOV with a {user_size} inch screen is between {fovEstimate[0]} and {fovEstimate[1]} degrees, which is below 60 degrees. Your FOV is within an acceptable range.")
+    elif fovEstimate[1] in np.arange(55,60, 0.1):
+        print(f"Your FOV with a {user_size} inch screen is between {fovEstimate[0]} and {fovEstimate[1]} degrees, which is above the optimal range, consider down-sizing for the best viewing experience.")
         exit() 
+        
+    return fovEstimate
         
 
 def exit():
@@ -125,28 +120,24 @@ def caller():
     UpperEstimate()
     lowerTriangulation()
     upperTriangulation()
-    fovCheck()
+    #fovCheck()
 
-#caller()
-            
-        
-    
+ 
 def dataWriter():
     slicedDimensions = [40, 45, 50, 55, 60, 65, 70, 75]
-    #upperViewList = []
     
     for i in slicedDimensions:
         sizeCalculator(user_size=i)
         UpperEstimate()
         upperTriangulation()
-        sizeData.update({i : upperViewEstimate})
-  
-  
-    with open(f'{user_size}_{user_distance}.json', 'a+') as file: #a+ reading and writing - creates file if not exist
-       json.dump(sizeData, file)
+        fovData.append(upperViewEstimate)
     
-
-#dataWriter()
-
-##create function that asks what viewing distance, then shows max tv size. for loop
-#for i in __ if viewing angle is greater than 60 discard and move on. if below 60 print size
+    df = pd.DataFrame(
+        {'sizeData': sizeData,
+         'FOV': fovData
+        }
+    )
+    
+    df.to_csv('data.csv', encoding='utf-8', index=False)
+    
+    return df
