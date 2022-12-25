@@ -25,7 +25,7 @@ ggplot(data = user_data,
            fill = "orange", color = "black", alpha = 0.5)+ # orange rectangle
   annotate(geom = "rect", xmin = 40, xmax = Inf, ymin = 60, ymax = Inf,
            fill = "red", color = "black", alpha = 0.5)+ # red rectangle
-  labs(title = "FOV at 100 inch viewing distance", 
+  labs(title = "FOV at user-set viewing distance", 
        x = "TV Size (in)", 
        y = "Field of View (°)")+
   theme(plot.title = element_text(hjust = 0.5))+
