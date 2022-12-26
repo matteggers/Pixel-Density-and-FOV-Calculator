@@ -35,7 +35,7 @@ I can sit here and tell you that one source recommends X, while another recommen
 
 
 
-###Remaining Files:
+### Remaining Files:
 pixelDensity.py
 
     Gives pixel density of a screen based on diagonal length and screen type.
