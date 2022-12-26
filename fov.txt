@@ -1,5 +1,5 @@
 python fovRun.py
 
 
-export PATH="C:\Program Files\R\R-4.2.2\bin"
+export PATH=""
 Rscript graphing.r
