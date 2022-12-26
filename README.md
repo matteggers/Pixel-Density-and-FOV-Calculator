@@ -44,7 +44,7 @@ pythagoreanPixelDensity.py
 
     Gives pixel density based on the width or height of a desired screen.
 
-FOV/identified_pattern.txt
+identified_pattern.txt
 
     This is a pattern I identified regarding dimension change of screens.
 
