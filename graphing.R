@@ -3,7 +3,7 @@ library(ggplot2)
 library(ggrepel)
 
 
-setwd("C:/Users/matth/Documents/Projects/PixelDensity")
+setwd("USER PATH")
 user_data <- read.csv('data.csv')
 
 
