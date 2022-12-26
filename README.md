@@ -4,7 +4,7 @@ This project was proof that I understand basic programming concepts and could us
 
 
 
-##What makes a good FOV?
+## What makes a good FOV?
 
 I can sit here and tell you that one source recommends X, while another recommends Y. In my personal experience, a FOV between 36° and 50° is acceptable. I don't recommend viewing a screen with a FOV over 60° because anything >60° exists outside of a human's *image recognition FOV*. The image recognition FOV, or IRFOV, is the field of vision in which a human can identify what is there. This means that anything above 60° is in your peripheral vision, and is wasted screen space.
 
